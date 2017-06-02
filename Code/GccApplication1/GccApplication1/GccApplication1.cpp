@@ -7,11 +7,38 @@
 
 
 #include <avr/io.h>
+#include "Init.h"
+
+//// Timer 0 overflow interrupt service routine
+//interrupt [TIM0_OVF] void timer0_ovf_isr(void)
+//{
+//// Place your code here
+//
+//}
+//
+//// Timer1 overflow interrupt service routine
+//interrupt [TIM1_OVF] void timer1_ovf_isr(void)
+//{
+//// Place your code here
+//
+//}
+
 
 int main(void)
 {
+	
+	init();
+	
+	
     while(1)
     {
         //TODO:: Please write your application code 
+		if(PORTD2==1)
+		{
+			PORTB=0b11111111;
+			
+		}
+		
+		
     }
 }
