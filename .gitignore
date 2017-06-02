@@ -1,3 +1,14 @@
 *.workspace
 *.pdsbak
 *.ZIP
+*.eep
+*.elf
+*.lss
+*.map
+*.o
+*.srec
+*.mk
+*.atsln
+*.atsuo
+*.d
+Code/GccApplication1/GccApplication1/Debug/Makefile
