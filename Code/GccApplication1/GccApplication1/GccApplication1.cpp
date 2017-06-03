@@ -33,11 +33,15 @@ int main(void)
     while(1)
     {
         //TODO:: Please write your application code 
-		if(PORTD2==1)
+		if(PIND&(1<<PD2))
 		{
-			PORTB=0b11111111;
-			
+			PORTB=(0<<PD0)+(0<<PD4);
 		}
+		else
+		{
+			PORTB=(1<<PD0)+(1<<PD4);
+		}
+		
 		
 		
     }
