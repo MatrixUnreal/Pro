@@ -8,6 +8,62 @@
 
 #ifndef INIT_H_
 #define INIT_H_
+void timer_init()
+{
+	// Timer/Counter 0 initialization
+	// Clock source: System Clock
+	// Clock value: 115,200 kHz
+	// Mode: CTC top=OCR0
+	// OC0 output: Disconnected
+	// Timer Period: 1,9965 ms
+	TCCR0=(0<<WGM00) | (0<<COM01) | (0<<COM00) | (1<<WGM01) | (0<<CS02) | (1<<CS01) | (1<<CS00);
+	TCNT0=0x00;
+	OCR0=0xE5;
+
+	// Timer/Counter 1 initialization
+	// Clock source: System Clock
+	// Clock value: 28,800 kHz
+	// Mode: CTC top=OCR1A
+	// OC1A output: Clear on compare match
+	// OC1B output: Disconnected
+	// Noise Canceler: Off
+	// Input Capture on Falling Edge
+	// Timer Period: 1 s
+	// Output Pulse(s):
+	// OC1A Period: 1 s
+	// Timer1 Overflow Interrupt: Off
+	// Input Capture Interrupt: Off
+	// Compare A Match Interrupt: On
+	// Compare B Match Interrupt: Off
+	TCCR1A=(1<<COM1A1) | (0<<COM1A0) | (0<<COM1B1) | (0<<COM1B0) | (0<<WGM11) | (0<<WGM10);
+	TCCR1B=(0<<ICNC1) | (0<<ICES1) | (0<<WGM13) | (1<<WGM12) | (1<<CS12) | (0<<CS11) | (0<<CS10);
+	TCNT1H=0x00;
+	TCNT1L=0x00;
+	ICR1H=0x00;
+	ICR1L=0x00;
+	OCR1AH=0x70;
+	OCR1AL=0x7F;
+	OCR1BH=0x00;
+	OCR1BL=0x00;
+
+	// Timer/Counter 2 initialization
+	// Clock source: System Clock
+	// Clock value: 7,200 kHz
+	// Mode: CTC top=OCR2A
+	// OC2 output: Clear on compare match
+	// Timer Period: 10 ms
+	// Output Pulse(s):
+	// OC2 Period: 10 ms
+	ASSR=0<<AS2;
+	TCCR2=(0<<PWM2) | (1<<COM21) | (0<<COM20) | (1<<CTC2) | (1<<CS22) | (1<<CS21) | (1<<CS20);
+	TCNT2=0xB8;
+	OCR2=0x47;
+
+	// Timer(s)/Counter(s) Interrupt(s) initialization
+	TIMSK=(0<<OCIE2) | (1<<TOIE2) | (0<<TICIE1) | (1<<OCIE1A) | (0<<OCIE1B) | (0<<TOIE1) | (0<<OCIE0) | (0<<TOIE0);
+}
+
+
 void init()
 {	
 
@@ -41,57 +97,26 @@ void init()
 	// State: Bit6=P Bit5=P Bit4=P Bit3=P Bit2=P Bit1=P Bit0=P
 	PORTD=(1<<PORTD6) | (1<<PORTD5) | (1<<PORTD4) | (1<<PORTD3) | (1<<PORTD2) | (1<<PORTD1) | (1<<PORTD0);
 
-	// Timer/Counter 0 initialization
-	// Clock source: System Clock
-	// Clock value: Timer 0 Stopped
-	// Mode: Normal top=0xFF
-	// OC0A output: Disconnected
-	// OC0B output: Disconnected
-	TCCR0A=(0<<COM0A1) | (0<<COM0A0) | (0<<COM0B1) | (0<<COM0B0) | (0<<WGM01) | (0<<WGM00);
-	TCCR0B=(0<<WGM02) | (0<<CS02) | (0<<CS01) | (0<<CS00);
-	TCNT0=0x00;
-	OCR0A=0x00;
-	OCR0B=0x00;
-
-	// Timer/Counter 1 initialization
-	// Clock source: System Clock
-	// Clock value: Timer1 Stopped
-	// Mode: Normal top=0xFFFF
-	// OC1A output: Disconnected
-	// OC1B output: Disconnected
-	// Noise Canceler: Off
-	// Input Capture on Falling Edge
-	// Timer1 Overflow Interrupt: On
-	// Input Capture Interrupt: Off
-	// Compare A Match Interrupt: Off
-	// Compare B Match Interrupt: Off
-	TCCR1A=(0<<COM1A1) | (0<<COM1A0) | (0<<COM1B1) | (0<<COM1B0) | (0<<WGM11) | (0<<WGM10);
-	TCCR1B=(0<<ICNC1) | (0<<ICES1) | (0<<WGM13) | (0<<WGM12) | (0<<CS12) | (0<<CS11) | (0<<CS10);
-	TCNT1H=0x00;
-	TCNT1L=0x00;
-	ICR1H=0x00;
-	ICR1L=0x00;
-	OCR1AH=0x00;
-	OCR1AL=0x00;
-	OCR1BH=0x00;
-	OCR1BL=0x00;
-
-	// Timer(s)/Counter(s) Interrupt(s) initialization
-	TIMSK=(1<<TOIE1) | (0<<OCIE1A) | (0<<OCIE1B) | (0<<ICIE1) | (0<<OCIE0B) | (1<<TOIE0) | (0<<OCIE0A);
-
 	// External Interrupt(s) initialization
 	// INT0: Off
 	// INT1: Off
 	// Interrupt on any change on pins PCINT0-7: Off
-	GIMSK=(0<<INT1) | (0<<INT0) | (0<<PCIE);
+	//GIMSK=(0<<INT1) | (0<<INT0) | (0<<PCIE);
 	MCUCR=(0<<ISC11) | (0<<ISC10) | (0<<ISC01) | (0<<ISC00);
 
-	// USI initialization
-	// Mode: Disabled
-	// Clock source: Register & Counter=no clk.
-	// USI Counter Overflow Interrupt: Off
-	USICR=(0<<USISIE) | (0<<USIOIE) | (0<<USIWM1) | (0<<USIWM0) | (0<<USICS1) | (0<<USICS0) | (0<<USICLK) | (0<<USITC);
-
+	#define XTAL 8000000L
+	#define baudrate 9600L
+	#define bauddivider (XTAL/(16*baudrate)-1)
+	#define HI(x) ((x)>>8)
+	#define LO(x) ((x)& 0xFF)
+	
+	UBRRL = LO(bauddivider);
+	UBRRH = HI(bauddivider);
+	UCSRA = 0;
+	UCSRB = 1<<RXEN|1<<TXEN|1<<RXCIE|0<<TXCIE;
+	UCSRC = 1<<UCSZ0|1<<UCSZ1;
+	
+/*
 	// USART initialization
 	// Communication Parameters: 8 Data, 1 Stop, No Parity
 	// USART Receiver: On
@@ -103,6 +128,8 @@ void init()
 	UCSRC=(0<<UMSEL) | (0<<UPM1) | (0<<UPM0) | (0<<USBS) | (1<<UCSZ1) | (1<<UCSZ0) | (0<<UCPOL);
 	UBRRH=0x00;
 	UBRRL=0x19;
+	
+*/	
 
 	// Analog Comparator initialization
 	// Analog Comparator: Off
@@ -110,10 +137,10 @@ void init()
 	// connected to the AIN0 pin
 	// The Analog Comparator's negative input is
 	// connected to the AIN1 pin
-	ACSR=(1<<ACD) | (0<<ACBG) | (0<<ACO) | (0<<ACI) | (0<<ACIE) | (0<<ACIC) | (0<<ACIS1) | (0<<ACIS0);
+	//ACSR=(1<<ACD) | (0<<ACBG) | (0<<ACO) | (0<<ACI) | (0<<ACIE) | (0<<ACIC) | (0<<ACIS1) | (0<<ACIS0);
 	// Digital input buffer on AIN0: On
 	// Digital input buffer on AIN1: On
-	DIDR=(0<<AIN0D) | (0<<AIN1D);
+//	DIDR=(0<<AIN0D) | (0<<AIN1D);
 }
 
 
