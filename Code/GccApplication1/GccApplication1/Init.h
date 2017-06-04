@@ -10,57 +10,13 @@
 #define INIT_H_
 void timer_init()
 {
-	// Timer/Counter 0 initialization
-	// Clock source: System Clock
-	// Clock value: 115,200 kHz
-	// Mode: CTC top=OCR0
-	// OC0 output: Disconnected
-	// Timer Period: 1,9965 ms
-	TCCR0=(0<<WGM00) | (0<<COM01) | (0<<COM00) | (1<<WGM01) | (0<<CS02) | (1<<CS01) | (1<<CS00);
-	TCNT0=0x00;
-	OCR0=0xE5;
 
-	// Timer/Counter 1 initialization
-	// Clock source: System Clock
-	// Clock value: 28,800 kHz
-	// Mode: CTC top=OCR1A
-	// OC1A output: Clear on compare match
-	// OC1B output: Disconnected
-	// Noise Canceler: Off
-	// Input Capture on Falling Edge
-	// Timer Period: 1 s
-	// Output Pulse(s):
-	// OC1A Period: 1 s
-	// Timer1 Overflow Interrupt: Off
-	// Input Capture Interrupt: Off
-	// Compare A Match Interrupt: On
-	// Compare B Match Interrupt: Off
-	TCCR1A=(1<<COM1A1) | (0<<COM1A0) | (0<<COM1B1) | (0<<COM1B0) | (0<<WGM11) | (0<<WGM10);
-	TCCR1B=(0<<ICNC1) | (0<<ICES1) | (0<<WGM13) | (1<<WGM12) | (1<<CS12) | (0<<CS11) | (0<<CS10);
-	TCNT1H=0x00;
-	TCNT1L=0x00;
-	ICR1H=0x00;
-	ICR1L=0x00;
-	OCR1AH=0x70;
-	OCR1AL=0x7F;
-	OCR1BH=0x00;
-	OCR1BL=0x00;
-
-	// Timer/Counter 2 initialization
-	// Clock source: System Clock
-	// Clock value: 7,200 kHz
-	// Mode: CTC top=OCR2A
-	// OC2 output: Clear on compare match
-	// Timer Period: 10 ms
-	// Output Pulse(s):
-	// OC2 Period: 10 ms
-	ASSR=0<<AS2;
-	TCCR2=(0<<PWM2) | (1<<COM21) | (0<<COM20) | (1<<CTC2) | (1<<CS22) | (1<<CS21) | (1<<CS20);
-	TCNT2=0xB8;
-	OCR2=0x47;
-
+	TCCR0B=0x03;//1-64uS,2-510uS,3-4.1mS,4-16.3mS,5-65.5mS
+    TCCR1B=0x03;
+	
 	// Timer(s)/Counter(s) Interrupt(s) initialization
-	TIMSK=(0<<OCIE2) | (1<<TOIE2) | (0<<TICIE1) | (1<<OCIE1A) | (0<<OCIE1B) | (0<<TOIE1) | (0<<OCIE0) | (0<<TOIE0);
+	TIMSK= (1<<TOIE1) | (0<<OCIE1A) | (0<<OCIE1B) | (0<<ICIE1) | (0<<OCIE0B)| (1<<TOIE0)  | (0<<OCIE0A);
+
 }
 
 
