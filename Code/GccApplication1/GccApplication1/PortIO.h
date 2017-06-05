@@ -27,8 +27,6 @@
 #define LED4_ON PORTB|=(1<<LED4)
 #define LED4_OFF PORTB&=~(1<<LED4)
 
-#define ILED0 (PIND&(1<<PD0))
-#define ILED1 (PIND&(1<<PD1))
 #define ILED2 (PIND&(1<<PD2))
 #define ILED3 (PIND&(1<<PD3))
 #define ILED4 (PIND&(1<<PD4))

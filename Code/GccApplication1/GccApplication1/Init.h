@@ -11,7 +11,7 @@
 void timer_init()
 {
 
-	TCCR0B=0x03;//1-64uS,2-510uS,3-4.1mS,4-16.3mS,5-65.5mS
+	TCCR0B=0x03;//1-64uS,2-510uS,3-4.1mS,4-16.3mS,5-65.5mS   Prescaller > ;0=STOP; 2=F/8; 3=F/64 4=F/256;
     TCCR1B=0x03;
 	
 	// Timer(s)/Counter(s) Interrupt(s) initialization
@@ -49,9 +49,9 @@ void init()
 
 	// Port D initialization
 	// Function: Bit6=In Bit5=In Bit4=In Bit3=In Bit2=In Bit1=In Bit0=In
-	DDRD=(0<<DDD6) | (0<<DDD5) | (0<<DDD4) | (0<<DDD3) | (0<<DDD2) | (0<<DDD1) | (0<<DDD0);
+	DDRD=(0<<DDD6) | (0<<DDD5) | (0<<DDD4) | (0<<DDD3) | (0<<DDD2);
 	// State: Bit6=P Bit5=P Bit4=P Bit3=P Bit2=P Bit1=P Bit0=P
-	PORTD=(1<<PORTD6) | (1<<PORTD5) | (1<<PORTD4) | (1<<PORTD3) | (1<<PORTD2) | (1<<PORTD1) | (1<<PORTD0);
+	PORTD=(1<<PORTD6) | (1<<PORTD5) | (1<<PORTD4) | (1<<PORTD3) | (1<<PORTD2);
 
 	// External Interrupt(s) initialization
 	// INT0: Off
@@ -60,18 +60,7 @@ void init()
 	//GIMSK=(0<<INT1) | (0<<INT0) | (0<<PCIE);
 	MCUCR=(0<<ISC11) | (0<<ISC10) | (0<<ISC01) | (0<<ISC00);
 
-	#define XTAL 8000000L
-	#define baudrate 9600L
-	#define bauddivider (XTAL/(16*baudrate)-1)
-	#define HI(x) ((x)>>8)
-	#define LO(x) ((x)& 0xFF)
-	
-	UBRRL = LO(bauddivider);
-	UBRRH = HI(bauddivider);
-	UCSRA = 0;
-	UCSRB = 1<<RXEN|1<<TXEN|1<<RXCIE|0<<TXCIE;
-	UCSRC = 1<<UCSZ0|1<<UCSZ1;
-	
+
 /*
 	// USART initialization
 	// Communication Parameters: 8 Data, 1 Stop, No Parity
@@ -86,17 +75,6 @@ void init()
 	UBRRL=0x19;
 	
 */	
-
-	// Analog Comparator initialization
-	// Analog Comparator: Off
-	// The Analog Comparator's positive input is
-	// connected to the AIN0 pin
-	// The Analog Comparator's negative input is
-	// connected to the AIN1 pin
-	//ACSR=(1<<ACD) | (0<<ACBG) | (0<<ACO) | (0<<ACI) | (0<<ACIE) | (0<<ACIC) | (0<<ACIS1) | (0<<ACIS0);
-	// Digital input buffer on AIN0: On
-	// Digital input buffer on AIN1: On
-//	DIDR=(0<<AIN0D) | (0<<AIN1D);
 }
 
 
