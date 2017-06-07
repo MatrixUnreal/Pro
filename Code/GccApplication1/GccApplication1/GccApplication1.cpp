@@ -14,9 +14,41 @@ int baudrate = 9600; // Скорость передачи данных в бит/с
 void USART_Transmit( unsigned char data );
 void USART_Init( unsigned int ubrr);
 
+class MotorDC
+{
+	public:
+	char state,   //0-free,1-busy
+	     dirrect, //0-counter-clockwise,1-clockwise
+		 location;//0-middle,1-bottom,2-top
+	int time_from_start;
+	public:
+	void Stop()
+	{
+		O_ROT1_OFF;
+		O_ROT2_OFF;
+		state=0;
+	}
+	void Run_Forward()
+	{
+		state=1;
+		dirrect=0;
+		O_ROT2_OFF;
+		O_ROT1_ON;		
+	}
+	void Run_Backward()
+	{
+		state=1;
+		dirrect=1;
+		O_ROT1_OFF;
+		O_ROT2_ON;		
+	}
+	
+} Motor;
+
+
 ISR(USART_RX_vect)
 {
-	PORTB=~PORTB;
+	
 	int b;
 	b = UDR;
 	// Выполняем обработку принятого байта
@@ -25,6 +57,7 @@ ISR(USART_RX_vect)
 		USART_Transmit('R');//Отправляем букву "R"
 		USART_Transmit(0x0d);//переход в начало строки
 		USART_Transmit(0x0a);//переход на новую строку
+		Motor.Run_Forward();
 	}
 	else//Если нет
 	if (b=='2')//Если приняли "2"
@@ -32,6 +65,15 @@ ISR(USART_RX_vect)
 		USART_Transmit('L');//Отправляем букву "L"
 		USART_Transmit(0x0d);//переход в начало строки
 		USART_Transmit(0x0a);//переход на новую строку
+		Motor.Run_Backward();
+	}
+	else//Если нет
+	if (b=='3')//Если приняли "2"
+	{
+		USART_Transmit('S');//Отправляем букву "L"
+		USART_Transmit(0x0d);//переход в начало строки
+		USART_Transmit(0x0a);//переход на новую строку
+		Motor.Stop();
 	}
 }
 
@@ -93,15 +135,23 @@ int main(void)
 	sei();
     while(1)
     {
-		/*if(!ILED2)
+		if(IPORT5)
 		{
-			ELED_ON;
-			LED1_ON;			
+			Motor.Stop();
+			Motor.state=0;
+			Motor.location=1;
+		}
+		
+		
+		/*if(!IPORT2)
+		{
+			OPORTE_ON;
+			OPORT1_ON;			
 		}
 		else
 		{
-			ELED_OFF;
-			LED1_OFF;
+			OPORTE_OFF;
+			OPORT1_OFF;
 		}*/
 
     }
