@@ -97,6 +97,9 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ClassCode.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Controller.h">
       <SubType>compile</SubType>
     </Compile>
