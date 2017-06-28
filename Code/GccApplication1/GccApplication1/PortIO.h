@@ -16,6 +16,7 @@
 #define OPORT4 PB3
 #define OPORTE PB4
 
+
 #define O_ENABLE1 PB5 
 #define O_ROT1 PB6
 #define O_ROT2 PB7

@@ -13,7 +13,6 @@ void timer_init()
 
 	TCCR0B=0x03;//1-64uS,2-510uS,3-4.1mS,4-16.3mS,5-65.5mS   Prescaller > ;0=STOP; 2=F/8; 3=F/64 4=F/256;
     TCCR1B=0x03;
-	
 	// Timer(s)/Counter(s) Interrupt(s) initialization
 	TIMSK= (1<<TOIE1) | (0<<OCIE1A) | (0<<OCIE1B) | (0<<ICIE1) | (0<<OCIE0B)| (1<<TOIE0)  | (0<<OCIE0A);
 
